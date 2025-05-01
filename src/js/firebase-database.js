@@ -15,5 +15,5 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
-
+const db = getDatabase(app, "https://dreamtowndemo-default-rtdb.asia-southeast1.firebasedatabase.app");
 export { database, ref, set, get, child, update, remove };
