@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Pasar DreamTown - Rare Items</title>
+  <style>
+    body { font-family: sans-serif; background: #eef2f3; padding: 20px; }
+    h1, h3 { text-align: center; }
+    .market-container { background: white; padding: 20px; border-radius: 10px; max-width: 750px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .status { margin-bottom: 20px; text-align: center; }
+    .item-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .item-row input { width: 60px; text-align: center; }
+    button { padding: 5px 15px; margin-left: 5px; }
+    .rare { color: darkviolet; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="market-container">
+    <h1>Pasar DreamTown</h1>
+    <div class="status">
+      <h3>Wang: <span id="money">1000</span> gold</h3>
+      <h3>Inventory: Padi(<span id="padiCount">0</span>), Sayur(<span id="sayurCount">0</span>), Kayu(<span id="kayuCount">0</span>), <span class="rare">Kristal(<span id="kristalCount">0</span>)</span></h3>
+    </div>
+
+    <!-- Biasa -->
+    <div class="item-row">
+      <span>Padi - Harga: 20g</span>
+      <input type="number" id="padiQty" min="1" value="1"/>
+      <button onclick="sellItem('Padi')">Jual</button>
+      <button onclick="buyItem('Padi')">Beli</button>
+    </div>
+    <div class="item-row">
+      <span>Sayur - Harga: 10g</span>
+      <input type="number" id="sayurQty" min="1" value="1"/>
+      <button onclick="sellItem('Sayur')">Jual</button>
+      <button onclick="buyItem('Sayur')">Beli</button>
+    </div>
+    <div class="item-row">
+      <span>Kayu - Harga: 15g</span>
+      <input type="number" id="kayuQty" min="1" value="1"/>
+      <button onclick="sellItem('Kayu')">Jual</button>
+      <button onclick="buyItem('Kayu')">Beli</button>
+    </div>
+
+    <!-- Rare Item -->
+    <div class="item-row">
+      <span class="rare">Kristal Ajaib - Harga: 250g</span>
+      <input type="number" id="kristalQty" min="1" value="1"/>
+      <button onclick="buyItem('Kristal')">Beli</button>
+    </div>
+  </div>
+
+  <script>
+    let money = 1000;
+    let inventory = {
+      Padi: 0,
+      Sayur: 0,
+      Kayu: 0,
+      Kristal: 0
+    };
+    const prices = {
+      Padi: 20,
+      Sayur: 10,
+      Kayu: 15,
+      Kristal: 250
+    };
+
+    function updateUI() {
+      document.getElementById("money").textContent = money;
+      document.getElementById("padiCount").textContent = inventory["Padi"];
+      document.getElementById("sayurCount").textContent = inventory["Sayur"];
+      document.getElementById("kayuCount").textContent = inventory["Kayu"];
+      document.getElementById("kristalCount").textContent = inventory["Kristal"];
+    }
+
+    function buyItem(item) {
+      const qty = parseInt(document.getElementById(item.toLowerCase() + 'Qty').value);
+      const cost = prices[item] * qty;
+      if (money >= cost) {
+        money -= cost;
+        inventory[item] += qty;
+        alert("Anda membeli " + qty + " " + item + " dengan harga " + cost + "g.");
+      } else {
+        alert("Duit tidak mencukupi untuk beli " + item);
+      }
+      updateUI();
+    }
+
+    function sellItem(item) {
+      const qty = parseInt(document.getElementById(item.toLowerCase() + 'Qty').value);
+      if (inventory[item] >= qty) {
+        const gain = prices[item] * qty;
+        inventory[item] -= qty;
+        money += gain;
+        alert("Anda menjual " + qty + " " + item + " dan dapat " + gain + "g.");
+      } else {
+        alert("Item " + item + " tidak mencukupi untuk dijual.");
+      }
+      updateUI();
+    }
+
+    updateUI();
+  </script>
+</body>
+</html>

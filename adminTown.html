@@ -1,0 +1,19 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Town - DreamTown</title>
+    <script type="module" src="adminTown.js"></script>
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    <div id="adminPanel">
+        <input type="password" id="adminKey" placeholder="Enter Admin Key" />
+        <button onclick="checkAdmin()">Login</button>
+        <div id="adminControls" style="display:none;">
+            <h2>Player List</h2>
+            <div id="playerList">Loading...</div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,15 @@
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Node / JS build artifacts (optional if used later)
+node_modules/
+dist/
+build/
+
+# Log & temp files
+*.log
+*.tmp
+
+# Firebase cache (if used)
+.firebase/

@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html>
+<head><title>DreamTown Quest</title></head>
+<body style="text-align:center;padding:30px;font-family:sans-serif;">
+  <h2>DreamTown - Sistem Quest Harian</h2>
+  <p id="money">Duit: ...</p>
+  <p id="level">Level: ...</p>
+  <p id="inventory">Inventori: ...</p>
+
+  <h3>Quest Harian:</h3>
+  <ul id="questList"></ul>
+
+  <button onclick="addResource('Padi', 5)">Tani Padi +5</button>
+  <button onclick="addResource('Sayur', 5)">Tani Sayur +5</button>
+  <button onclick="addResource('Kayu', 5)">Kumpul Kayu +5</button>
+  <button onclick="addResource('Kristal', 1)">Cari Kristal +1</button>
+  <br><br>
+  <button onclick="upgradeBuilding()">Upgrade Bangunan (RM500)</button>
+
+  
+<script type="module">
+  import { loadPlayerData, savePlayerData } from "./firebase-game.js";
+  import { DailyQuest } from "./daily-quest.js";
+
+  window.playerData = {
+    money: 0,
+    level: 1,
+    inventory: { Padi: 0, Sayur: 0, Kayu: 0, Kristal: 0 }
+  };
+  window.savePlayerData = savePlayerData;
+
+  window.addEventListener("DOMContentLoaded", async () => {
+    const data = await loadPlayerData();
+    if (data) window.playerData = data;
+    updateUI();
+    await DailyQuest.init(window.playerData, savePlayerData);
+  });
+
+  function updateUI() {
+    document.getElementById("money").innerText = "Duit: " + window.playerData.money;
+    document.getElementById("level").innerText = "Level: " + window.playerData.level;
+    document.getElementById("inventory").innerText =
+      "Inventori - Padi: " + window.playerData.inventory.Padi +
+      ", Sayur: " + window.playerData.inventory.Sayur +
+      ", Kayu: " + window.playerData.inventory.Kayu +
+      ", Kristal: " + window.playerData.inventory.Kristal;
+  }
+
+  window.addResource = async function(type, amount) {
+    if (window.playerData.inventory[type] !== undefined) {
+      window.playerData.inventory[type] += amount;
+      await savePlayerData({ inventory: window.playerData.inventory });
+      updateUI();
+      DailyQuest.render(window.playerData, savePlayerData);
+    }
+  };
+
+  window.upgradeBuilding = async function() {
+    const upgradeCost = 500;
+    if (window.playerData.money >= upgradeCost) {
+      window.playerData.money -= upgradeCost;
+      window.playerData.level += 1;
+      await savePlayerData({
+        money: window.playerData.money,
+        level: window.playerData.level
+      });
+      alert("Bangunan dinaik taraf!");
+      updateUI();
+    } else {
+      alert("Tidak cukup duit untuk upgrade!");
+    }
+  };
+</script>
+
+</body>
+</html>

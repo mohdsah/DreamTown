@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>DreamTown Market</title>
+  <style>
+    body { font-family: sans-serif; background: #f3f3f3; padding: 20px; }
+    h1 { color: #333; }
+    .market-container { background: white; padding: 20px; border-radius: 10px; max-width: 600px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .item-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+    .item-row input { width: 50px; }
+  </style>
+</head>
+<body>
+  <div class="market-container">
+    <h1>Pasar DreamTown</h1>
+    <div class="item-row">
+      <span>Padi</span>
+      <input type="number" id="padiQty" min="1" value="1"/>
+      <button onclick="sellItem('Padi')">Jual</button>
+      <button onclick="buyItem('Padi')">Beli</button>
+    </div>
+    <div class="item-row">
+      <span>Sayur</span>
+      <input type="number" id="sayurQty" min="1" value="1"/>
+      <button onclick="sellItem('Sayur')">Jual</button>
+      <button onclick="buyItem('Sayur')">Beli</button>
+    </div>
+    <div class="item-row">
+      <span>Kayu</span>
+      <input type="number" id="kayuQty" min="1" value="1"/>
+      <button onclick="sellItem('Kayu')">Jual</button>
+      <button onclick="buyItem('Kayu')">Beli</button>
+    </div>
+  </div>
+
+  <script>
+    function sellItem(item) {
+      const qty = document.getElementById(item.toLowerCase() + 'Qty').value;
+      alert('Anda telah menjual ' + qty + ' unit ' + item + '.');
+    }
+
+    function buyItem(item) {
+      const qty = document.getElementById(item.toLowerCase() + 'Qty').value;
+      alert('Anda telah membeli ' + qty + ' unit ' + item + '.');
+    }
+  </script>
+</body>
+</html>
