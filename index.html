@@ -1,70 +1,36 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DreamTown Login</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DreamTown</title>
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(to bottom, #e0f7fa, #fff);
-      padding: 30px;
-      text-align: center;
-    }
-    h1, h2 {
-      color: #1e3a8a;
-    }
-    input, button, select {
-      padding: 10px;
-      margin: 6px;
-      font-size: 16px;
-      width: 220px;
-    }
-    #gamePanel { display: none; }
-    .section-title {
-      margin-top: 30px;
-      font-size: 20px;
-      font-weight: bold;
-    }
+    body { font-family: sans-serif; text-align: center; padding: 30px; background: #eef; }
+    .btn { padding: 10px 20px; margin: 6px; }
+    h2 { color: #003366; }
   </style>
 </head>
 <body>
+  <h2>Selamat datang ke DreamTown!</h2>
+  <p>XP: <span id="xp">0</span></p>
+  <p>Duit: <span id="money">0</span></p>
+  <p>Level: <span id="level">1</span></p>
 
-  <h1>DreamTown Login</h1>
-  <div id="loginPanel">
-    <input type="email" id="emailInput" placeholder="Email"><br>
-    <input type="password" id="passwordInput" placeholder="Password"><br>
-    <button id="loginBtn">Login</button>
-    <button id="registerBtn">Daftar</button>
-    <p id="loginStatus" style="color: red;"></p>
-  </div>
+  <button class="btn" id="gainXpBtn">Tambah XP</button>
+  <button class="btn" id="earnMoneyBtn">Tambah Duit</button>
 
-  <div id="gamePanel">
-    <h2>Selamat datang ke DreamTown!</h2>
-    <p>XP: <span id="xp">0</span></p>
-    <p>Duit: <span id="money">0</span></p>
-    <p>Level: <span id="level">1</span></p>
-    <button id="gainXpBtn">Tambah XP</button>
-    <button id="earnMoneyBtn">Tambah Duit</button>
+  <h3>Farming & Resources</h3>
+  <button class="btn" onclick="addResource('Padi', 5)">Tani Padi +5</button>
+  <button class="btn" onclick="addResource('Sayur', 5)">Tani Sayur +5</button>
+  <button class="btn" onclick="addResource('Kayu', 5)">Kumpul Kayu +5</button>
+  <button class="btn" onclick="addResource('Kristal', 1)">Cari Kristal +1</button>
 
-    <div class="section-title">Farming & Resources</div>
-    <button id="taniPadiBtn">Tani Padi +5</button>
-    <button id="taniSayurBtn">Tani Sayur +5</button>
-    <button id="kumpulKayuBtn">Kumpul Kayu +5</button>
-    <button id="cariKristalBtn">Cari Kristal +1</button>
+  <p>Padi: <span id="padiCount">0</span></p>
+  <p>Sayur: <span id="sayurCount">0</span></p>
+  <p>Kayu: <span id="kayuCount">0</span></p>
+  <p>Kristal: <span id="kristalCount">0</span></p>
 
-    <p>Padi: <span id="padiCount">0</span></p>
-    <p>Sayur: <span id="sayurCount">0</span></p>
-    <p>Kayu: <span id="kayuCount">0</span></p>
-    <p>Kristal: <span id="kristalCount">0</span></p>
-
-    <br><button id="logoutBtn">Logout</button>
-  </div>
-
-  <!-- Script Import -->
-  <script type="module" src="src/js/firebase-config.js"></script>
-  <script type="module" src="src/js/firebase-auth.js"></script>
+  <!-- Firebase SDK & Main Logic -->
   <script type="module" src="main.js"></script>
-
 </body>
 </html>
