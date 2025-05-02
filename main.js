@@ -26,3 +26,10 @@ if (xpBtn) { xpBtn.addEventListener("click", () => { playerData.xp = (playerData
 
 if (moneyBtn) { moneyBtn.addEventListener("click", () => { playerData.money += 50; savePlayerData({ money: playerData.money }); updateUI(); }); } }
 
+function updateInventoryUI(inventory) {
+  document.getElementById("invPadi").textContent = inventory.Padi;
+  document.getElementById("invSayur").textContent = inventory.Sayur;
+  document.getElementById("invKayu").textContent = inventory.Kayu;
+  document.getElementById("invKristal").textContent = inventory.Kristal;
+}
+
