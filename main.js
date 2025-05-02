@@ -114,3 +114,13 @@ window.topupKristal = async function(amount) {
   savePlayerData();
   alert("Topup berjaya: +" + amount + " Kristal!");
 };
+
+import { getDefaultInventory, updateInventoryUI } from "./src/js/inventory.js";
+
+// playerData default
+let playerData = {
+  xp: 0,
+  money: 0,
+  level: 1,
+  inventory: getDefaultInventory()
+};
