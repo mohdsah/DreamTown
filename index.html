@@ -1,53 +1,84 @@
-<!DOCTYPE html>
-<html lang="ms">
+<!DOCTYPE html><html lang="ms">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DreamTown - Login</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DreamTown - Premium Login</title>
+  <link rel="stylesheet" href="main.css">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
     body {
-      font-family: Arial, sans-serif;
-      background: #f0f8ff;
-      padding: 40px;
-      text-align: center;
-    }
-    h1 { color: #333; }
-    input, button {
-      padding: 10px;
-      margin: 5px;
-      font-size: 16px;
-      width: 220px;
-    }
-    #gamePanel { display: none; }
-    #statusText {
-      margin: 20px;
-      font-weight: bold;
-    }
+      background: url('https://images.unsplash.com/photo-1503264116251-35a269479413') no-repeat center center/cover;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }.glass {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 30px;
+  width: 320px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #fff;
+  text-align: center;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: rgba(255,255,255,0.1);
+  margin: 10px 0;
+  padding: 8px;
+  border-radius: 10px;
+}
+
+.primary, .secondary {
+  padding: 10px 20px;
+  border-radius: 12px;
+  margin-top: 10px;
+  font-weight: bold;
+  width: 100%;
+}
+
+.primary {
+  background: #4fc3f7;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.secondary {
+  background: transparent;
+  border: 1px solid #fff;
+  color: #fff;
+  cursor: pointer;
+}
+
   </style>
 </head>
 <body>
-  <h1>DreamTown Login</h1>
+  <div class="glass">
+    <h2>DreamTown Login</h2>
+    <div id="loginPanel">
+      <input type="email" id="emailInput" placeholder="Email"><br>
+      <input type="password" id="passwordInput" placeholder="Password"><br>
+      <button class="primary" id="loginBtn">Login</button>
+      <button class="secondary" id="registerBtn">Daftar</button>
+    </div><div id="gamePanel" style="display:none">
+  <p id="statusText">Loading...</p>
+  <div class="stat-card">XP: <span id="xp">0</span></div>
+  <div class="stat-card">Duit: <span id="money">0</span></div>
+  <div class="stat-card">Level: <span id="level">1</span></div>
+  <button class="primary" id="gainXpBtn">Tambah XP</button>
+  <button class="primary" id="earnMoneyBtn">Tambah Duit</button>
+  <button class="secondary" id="logoutBtn">Logout</button>
+</div>
 
-  <div id="loginPanel">
-    <input type="email" id="emailInput" placeholder="Email"><br>
-    <input type="password" id="passwordInput" placeholder="Password"><br>
-    <button id="loginBtn">Login</button>
-    <button id="registerBtn">Daftar</button>
-  </div>
-
-  <div id="gamePanel">
-    <p id="statusText">Loading...</p>
-    <button id="logoutBtn">Logout</button>
-    <h2>Selamat datang ke DreamTown!</h2>
-    <div class="stat">XP: <span id="xp">0</span></div>
-    <div class="stat">Duit: <span id="money">0</span></div>
-    <div class="stat">Level: <span id="level">1</span></div>
-    <button id="gainXpBtn">Tambah XP</button>
-    <button id="earnMoneyBtn">Tambah Duit</button>
-  </div>
-
-  <!-- Import Firebase & Game Logic -->
-  <script type="module" src="src/js/firebase-config.js"></script>
-  <script type="module" src="main.js"></script>
-</body>
+  </div>  <script type="module" src="src/js/firebase-config.js"></script>  <script type="module" src="src/js/firebase-auth.js"></script>  <script type="module" src="src/js/game.js"></script>  <script type="module" src="main.js"></script></body>
 </html>
