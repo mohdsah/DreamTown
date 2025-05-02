@@ -1,7 +1,20 @@
-import app from "./src/js/firebase-config.js";
-import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
+// Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyABbbqTjJ0AQUlOVzv6SJtnjUCAWKjnQK8",
+  authDomain: "dreamtowndemo.firebaseapp.com",
+  databaseURL: "https://dreamtowndemo-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "dreamtowndemo",
+  storageBucket: "dreamtowndemo.appspot.com",
+  messagingSenderId: "388188231244",
+  appId: "1:388188231244:web:c76651908a0c14f0ee06e9"
+};
+
+// Init
+const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth();
 
@@ -10,12 +23,7 @@ let playerData = {
   xp: 0,
   money: 0,
   level: 1,
-  inventory: {
-    Padi: 0,
-    Sayur: 0,
-    Kayu: 0,
-    Kristal: 0
-  }
+  inventory: { Padi: 0, Sayur: 0, Kayu: 0, Kristal: 0 }
 };
 
 function updateUI() {
@@ -28,67 +36,53 @@ function updateUI() {
   document.getElementById("kristalCount").innerText = playerData.inventory.Kristal;
 }
 
-function saveToFirebase() {
+function savePlayerData() {
   if (currentUID) {
-    const userRef = ref(db, "players/" + currentUID);
-    set(userRef, playerData);
+    set(ref(db, "players/" + currentUID), playerData);
   }
 }
 
-function setupGameEvents() {
-  document.getElementById("gainXpBtn").addEventListener("click", () => {
+function setupEvents() {
+  document.getElementById("gainXpBtn").onclick = () => {
     playerData.xp += 10;
     if (playerData.xp >= 100) {
       playerData.xp = 0;
       playerData.level += 1;
     }
     updateUI();
-    saveToFirebase();
-  });
+    savePlayerData();
+  };
 
-  document.getElementById("earnMoneyBtn").addEventListener("click", () => {
+  document.getElementById("earnMoneyBtn").onclick = () => {
     playerData.money += 50;
     updateUI();
-    saveToFirebase();
-  });
-
-  // Farming events
-  document.getElementById("taniPadiBtn").addEventListener("click", () => addResource("Padi", 5));
-  document.getElementById("taniSayurBtn").addEventListener("click", () => addResource("Sayur", 5));
-  document.getElementById("kumpulKayuBtn").addEventListener("click", () => addResource("Kayu", 5));
-  document.getElementById("cariKristalBtn").addEventListener("click", () => addResource("Kristal", 1));
+    savePlayerData();
+  };
 }
 
-function addResource(type, amount) {
-  if (playerData.inventory[type] !== undefined) {
-    playerData.inventory[type] += amount;
+window.addResource = function(item, amount) {
+  if (playerData.inventory[item] !== undefined) {
+    playerData.inventory[item] += amount;
     updateUI();
-    saveToFirebase();
+    savePlayerData();
   }
-}
+};
 
-// Auth listener
 onAuthStateChanged(auth, (user) => {
   if (user) {
     currentUID = user.uid;
     const userRef = ref(db, "players/" + currentUID);
-
     onValue(userRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        playerData = data;
-        if (!playerData.inventory) {
-          playerData.inventory = { Padi: 0, Sayur: 0, Kayu: 0, Kristal: 0 };
-        }
+      if (snapshot.exists()) {
+        playerData = snapshot.val();
         updateUI();
       } else {
-        set(userRef, playerData);
+        savePlayerData(); // First time user
       }
     });
-
-    setupGameEvents();
+    setupEvents();
   } else {
-    alert("Sila log masuk terlebih dahulu.");
+    alert("Sila log masuk dahulu.");
     window.location.href = "login.html";
   }
 });
