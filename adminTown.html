@@ -10,7 +10,14 @@
 <body>
   <div class="panel-box">
     <h2>Panel Bandar Admin</h2>
-    <p>Akses khas untuk pentadbir DreamTown</p><button class="admin-btn" onclick="tambahDuitSemua()">Tambah 100 Duit Kepada Semua</button>
+    <p>Akses khas untuk pentadbir DreamTown</p><div class="stat-card" id="statsPanel">
+  <h3>Statistik Pemain</h3>
+  <p><strong>Jumlah Pemain:</strong> <span id="totalPlayers">...</span></p>
+  <p><strong>Purata Level:</strong> <span id="avgLevel">...</span></p>
+  <p><strong>Duit Tertinggi:</strong> <span id="topMoney">...</span></p>
+</div>
+
+<button class="admin-btn" onclick="tambahDuitSemua()">Tambah 100 Duit Kepada Semua</button>
 <button class="admin-btn" onclick="naikkanLevelSemua()">Naikkan Semua Pemain ke Level 5</button>
 <button class="admin-btn" onclick="resetXpSemua()">Reset XP Semua Pemain</button>
 <button class="admin-btn" onclick="logoutAdmin()">Logout</button>
@@ -42,5 +49,31 @@
         });
       });
     }
+
+    // Statistik Pemain
+    import("https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js").then(({ getDatabase, ref, get }) => {
+      const db = getDatabase();
+      const statsPanel = document.getElementById("statsPanel");
+
+      get(ref(db, "players")).then(snapshot => {
+        if (snapshot.exists()) {
+          const players = snapshot.val();
+          const total = Object.keys(players).length;
+          let totalLevel = 0, topMoney = 0;
+
+          for (const uid in players) {
+            const p = players[uid];
+            totalLevel += (p.level || 1);
+            if ((p.money || 0) > topMoney) topMoney = p.money;
+          }
+
+          document.getElementById("totalPlayers").textContent = total;
+          document.getElementById("avgLevel").textContent = (totalLevel / total).toFixed(1);
+          document.getElementById("topMoney").textContent = topMoney;
+        } else {
+          statsPanel.style.display = "none";
+        }
+      });
+    });
   </script></body>
 </html>
