@@ -86,3 +86,47 @@ onAuthStateChanged(auth, (user) => {
     window.location.href = "login.html";
   }
 });
+
+import { loadPlayerData, savePlayerData } from "./firebase-game.js";
+
+window.playerData = {
+  xp: 0,
+  money: 0,
+  level: 1,
+  inventory: {
+    Padi: 0,
+    Sayur: 0,
+    Kayu: 0,
+    Kristal: 0
+  }
+};
+
+window.addEventListener("DOMContentLoaded", async () => {
+  const data = await loadPlayerData();
+  if (data) window.playerData = data;
+  updateUI();
+});
+
+gainXpBtn.addEventListener("click", () => {
+  playerData.xp += 10;
+  if (playerData.xp >= 100) {
+    playerData.xp = 0;
+    playerData.level += 1;
+  }
+  updateUI();
+  savePlayerData();
+});
+
+addResource("Padi", 5);
+
+function addResource(type, amount) {
+  if (playerData.inventory[type] !== undefined) {
+    playerData.inventory[type] += amount;
+    updateUI();
+    savePlayerData();
+  }
+}
+
+setInterval(() => {
+  savePlayerData();
+}, 10000); // 10 saat
