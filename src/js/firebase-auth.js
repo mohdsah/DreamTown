@@ -1,61 +1,22 @@
-import app from "./firebase-config.js";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+import app from './firebase-config.js';
+import { getDatabase, ref, get, set } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js';
+import { getAuth } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
 
-const auth = getAuth(app);
+const db = getDatabase(app);
+const auth = getAuth();
 
-const emailInput = document.getElementById("emailInput");
-const passwordInput = document.getElementById("passwordInput");
-const loginBtn = document.getElementById("loginBtn");
-const registerBtn = document.getElementById("registerBtn");
-const logoutBtn = document.getElementById("logoutBtn");
-const loginPanel = document.getElementById("loginPanel");
-const gamePanel = document.getElementById("gamePanel");
-const statusText = document.getElementById("loginStatus");
-
-if (loginBtn) {
-  loginBtn.addEventListener("click", () => {
-    const email = emailInput.value;
-    const password = passwordInput.value;
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => location.reload())
-      .catch(err => {
-        statusText.textContent = "Login gagal: " + err.message;
-      });
-  });
+export async function loadPlayerData() {
+  const user = auth.currentUser;
+  if (!user) return null;
+  const snap = await get(ref(db, 'players/' + user.uid));
+  return snap.exists() ? snap.val() : null;
 }
 
-if (registerBtn) {
-  registerBtn.addEventListener("click", () => {
-    const email = emailInput.value;
-    const password = passwordInput.value;
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(() => location.reload())
-      .catch(err => {
-        statusText.textContent = "Daftar gagal: " + err.message;
-      });
+export async function savePlayerData(data) {
+  const user = auth.currentUser;
+  if (!user) return;
+  return set(ref(db, 'players/' + user.uid), {
+    ...data,
+    email: user.email
   });
 }
-
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", () => {
-    signOut(auth).then(() => location.reload());
-  });
-}
-
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    loginPanel.style.display = "none";
-    gamePanel.style.display = "block";
-  } else {
-    loginPanel.style.display = "block";
-    gamePanel.style.display = "none";
-  }
-});
-
-export { auth };
