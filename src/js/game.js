@@ -44,3 +44,70 @@ function addResource(type, amount) {
     showToast("Jenis item tidak sah!", "#f44336");
   }
 }
+
+import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+
+const db = getDatabase();
+
+// Jual item
+document.getElementById("sellBtn").addEventListener("click", () => {
+  const item = document.getElementById("sellItem").value;
+  const qty = parseInt(document.getElementById("sellQty").value);
+  const price = parseInt(document.getElementById("sellPrice").value);
+
+  if (qty > 0 && price > 0 && window.playerData.inventory[item] >= qty) {
+    // Tolak stok dari inventory
+    window.playerData.inventory[item] -= qty;
+
+    // Simpan ke Firebase Marketplace
+    const sellRef = ref(db, "marketplace");
+    push(sellRef, {
+      uid: window.currentUID,
+      item,
+      qty,
+      price
+    });
+
+    savePlayerData({ inventory: window.playerData.inventory });
+    loadMarket();
+  } else {
+    alert("Stok tidak cukup atau input tidak sah.");
+  }
+});
+
+// Papar jualan
+function loadMarket() {
+  const marketRef = ref(db, "marketplace");
+  onValue(marketRef, (snapshot) => {
+    const list = document.getElementById("marketList");
+    list.innerHTML = "";
+    snapshot.forEach(child => {
+      const data = child.val();
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${data.item}</td>
+        <td>${data.qty}</td>
+        <td>RM ${data.price}</td>
+        <td><button onclick="buyItem('${child.key}', '${data.item}', ${data.qty}, ${data.price})">Beli</button></td>
+      `;
+      list.appendChild(row);
+    });
+  });
+}
+
+window.buyItem = function (id, item, qty, price) {
+  if (window.playerData.money >= price) {
+    window.playerData.money -= price;
+    window.playerData.inventory[item] += qty;
+    remove(ref(db, "marketplace/" + id));
+    savePlayerData({
+      money: window.playerData.money,
+      inventory: window.playerData.inventory
+    });
+    alert("Pembelian berjaya!");
+  } else {
+    alert("Duit tidak cukup!");
+  }
+};
+
+loadMarket();
