@@ -1,41 +1,61 @@
-
 <!DOCTYPE html>
 <html lang="ms">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DreamTown - Game</title>
+  <title>DreamTown - Login</title>
   <style>
     body {
-      font-family: sans-serif;
+      font-family: Arial, sans-serif;
       background: #f0f8ff;
-      padding: 20px;
+      padding: 40px;
       text-align: center;
     }
+
     h1 {
       color: #333;
     }
-    .stat {
-      font-size: 18px;
-      margin: 10px;
-    }
-    button {
-      padding: 10px 20px;
-      margin: 10px;
+
+    input, button {
+      padding: 10px;
+      margin: 5px;
       font-size: 16px;
+      width: 220px;
+    }
+
+    #gamePanel {
+      display: none;
+    }
+
+    #statusText {
+      margin: 20px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <h1>Selamat datang ke DreamTown!</h1>
+  <h1>DreamTown Login</h1>
 
-  <div class="stat">XP: <span id="xp">0</span></div>
-  <div class="stat">Duit: <span id="money">0</span></div>
-  <div class="stat">Level: <span id="level">1</span></div>
+  <div id="loginPanel">
+    <input type="email" id="emailInput" placeholder="Email"><br>
+    <input type="password" id="passwordInput" placeholder="Password"><br>
+    <button id="loginBtn">Login</button>
+    <button id="registerBtn">Daftar</button>
+  </div>
 
-  <button id="gainXpBtn">Tambah XP</button>
-  <button id="earnMoneyBtn">Tambah Duit</button>
+  <div id="gamePanel">
+    <p id="statusText">Loading...</p>
+    <button id="logoutBtn">Logout</button>
 
-  <script type="module" src="src/js/game.js"></script>
+    <h2>Selamat datang ke DreamTown!</h2>
+    <div class="stat">XP: <span id="xp">0</span></div>
+    <div class="stat">Duit: <span id="money">0</span></div>
+    <div class="stat">Level: <span id="level">1</span></div>
+    <button id="gainXpBtn">Tambah XP</button>
+    <button id="earnMoneyBtn">Tambah Duit</button>
+  </div>
+
+  <!-- Import main.js -->
+  <script type="module" src="main.js"></script>
 </body>
 </html>
