@@ -125,3 +125,8 @@ button:hover {
     font-size: 14px;
   }
 }
+
+input, button {
+  max-width: 100%;
+  box-sizing: border-box;
+}
