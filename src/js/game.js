@@ -1,57 +1,33 @@
-// Import modul Firebase Auth
-import { registerUser, loginUser, logoutUser, onUserStateChanged } from './js/firebase/firebase-auth.js';
+// src/js/game.js
+import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 
-// DOM element references
-const emailInput = document.getElementById("emailInput");
-const passwordInput = document.getElementById("passwordInput");
-const loginBtn = document.getElementById("loginBtn");
-const registerBtn = document.getElementById("registerBtn");
-const logoutBtn = document.getElementById("logoutBtn");
-const statusText = document.getElementById("statusText");
-
-// Event: Daftar pengguna baru
-registerBtn.addEventListener("click", () => {
-  const email = emailInput.value;
-  const password = passwordInput.value;
-  registerUser(email, password);
-});
-
-// Event: Login pengguna
-loginBtn.addEventListener("click", () => {
-  const email = emailInput.value;
-  const password = passwordInput.value;
-  loginUser(email, password);
-});
-
-// Event: Logout
-logoutBtn.addEventListener("click", () => {
-  logoutUser();
-});
-
-// Listener: Perubahan status login
-onUserStateChanged((user) => {
-  if (user) {
-    console.log("User logged in:", user.email);
-    statusText.innerText = `Logged in as: ${user.email}`;
-    showGameUI();
+// Ambil data pemain dari Firebase
+export async function getPlayerData(uid) {
+  const db = getDatabase();
+  const snapshot = await get(ref(db, `players/${uid}`));
+  if (snapshot.exists()) {
+    return snapshot.val();
   } else {
-    console.log("User logged out");
-    statusText.innerText = "Not logged in";
-    showLoginUI();
+    // Kalau tiada data, cipta data baru
+    const defaultData = { xp: 0, money: 0 };
+    await set(ref(db, `players/${uid}`), defaultData);
+    return defaultData;
   }
-});
-
-// Papar UI untuk login
-function showLoginUI() {
-  document.getElementById("loginPanel").style.display = "block";
-  document.getElementById("gamePanel").style.display = "none";
 }
 
-// Papar UI untuk permainan
-function showGameUI() {
-  document.getElementById("loginPanel").style.display = "none";
-  document.getElementById("gamePanel").style.display = "block";
+// Kira tahap berdasarkan XP (boleh ubah formula ikut logik game anda)
+export function calculateLevel(xp) {
+  return Math.floor(xp / 100) + 1;
 }
 
-// Mula dengan semak status login
-showLoginUI();
+// Kemas kini XP dalam Firebase
+export function updateXP(uid, xp) {
+  const db = getDatabase();
+  return set(ref(db, `players/${uid}/xp`), xp);
+}
+
+// Kemas kini Duit dalam Firebase
+export function updateMoney(uid, money) {
+  const db = getDatabase();
+  return set(ref(db, `players/${uid}/money`), money);
+}
