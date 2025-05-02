@@ -1,6 +1,6 @@
 // src/js/game.js
 import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
-
+import { addResource, upgradeBuilding } from "./farming.js";
 // Ambil data pemain dari Firebase
 export async function getPlayerData(uid) {
   const db = getDatabase();
