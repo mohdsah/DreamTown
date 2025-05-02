@@ -1,17 +1,31 @@
-// src/js/daily-quest.js
+export const DailyQuest = {
+  quests: [
+    { text: "Kumpul 10 Kayu", key: "Kayu", goal: 10, reward: 100 },
+    { text: "Tani 20 Padi", key: "Padi", goal: 20, reward: 200 },
+    { text: "Tani 20 Sayur", key: "Sayur", goal: 20, reward: 200 },
+    { text: "Cari 3 Kristal", key: "Kristal", goal: 3, reward: 300 }
+  ],
 
-export const DailyQuest = { quests: [ { task: "Kumpul 10 Padi", key: "Padi", target: 10, done: false }, { task: "Kumpul 5 Kayu", key: "Kayu", target: 5, done: false }, { task: "Cari 2 Kristal", key: "Kristal", target: 2, done: false } ],
+  async init(player, saveFunc) {
+    this.render(player, saveFunc);
+  },
 
-async init(playerData, saveFn) { this.player = playerData; this.save = saveFn; this.render(playerData, saveFn); },
+  async render(player, saveFunc) {
+    const list = document.getElementById("questList");
+    if (!list) return;
+    list.innerHTML = "";
 
-render(playerData, saveFn) { const list = document.getElementById("questList"); if (!list) return; list.innerHTML = ""; this.quests.forEach((q) => { const completed = playerData.inventory[q.key] >= q.target; const li = document.createElement("li"); li.innerText = ${q.task} - ${completed ? "SIAP" : "BELUM"}; list.appendChild(li);
-
-if (completed && !q.done) {
-    q.done = true;
-    playerData.money += 100;
-    saveFn({ money: playerData.money });
+    this.quests.forEach((quest) => {
+      const done = player.inventory[quest.key] >= quest.goal;
+      const li = document.createElement("li");
+      li.textContent = quest.text + (done ? " (Selesai!)" : "");
+      if (done) {
+        li.style.color = "green";
+        player.money += quest.reward;
+        player.inventory[quest.key] = 0;
+        saveFunc(player);
+      }
+      list.appendChild(li);
+    });
   }
-});
-
-} };
-
+};
