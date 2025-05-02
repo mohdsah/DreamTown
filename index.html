@@ -1,86 +1,40 @@
 <!DOCTYPE html><html lang="ms">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DreamTown - Premium Login</title>
-  <link rel="stylesheet" href="main.css">
+  <title>DreamTown - Game</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
     body {
-      background: url('https://images.unsplash.com/photo-1503264116251-35a269479413') no-repeat center center/cover;
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }.glass {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 16px;
-  padding: 30px;
-  width: 320px;
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  color: #fff;
-  text-align: center;
-}
-
-h2 {
-  margin-bottom: 20px;
-}
-
-.stat-card {
-  background: rgba(255,255,255,0.1);
-  margin: 10px 0;
-  padding: 8px;
-  border-radius: 10px;
-}
-
-.primary, .secondary {
-  padding: 10px 20px;
-  border-radius: 12px;
-  margin-top: 10px;
-  font-weight: bold;
-  width: 100%;
-}
-
-.primary {
-  background: #4fc3f7;
-  border: none;
-  color: white;
-  cursor: pointer;
-}
-
-.secondary {
-  background: transparent;
-  border: 1px solid #fff;
-  color: #fff;
-  cursor: pointer;
-}
-
+      font-family: sans-serif;
+      background: #f0f8ff;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      color: #333;
+    }
+    .stat {
+      font-size: 18px;
+      margin: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
-  <div id="toast" class="toast">Notifikasi di sini</div>
-  <div class="glass">
-    <h2>DreamTown Login</h2>
-    <div id="loginPanel">
-      <input type="email" id="emailInput" placeholder="Email"><br>
-      <input type="password" id="passwordInput" placeholder="Password"><br>
-      <button class="primary" id="loginBtn">Login</button>
-      <button class="secondary" id="registerBtn">Daftar</button>
-    </div><div id="gamePanel" style="display:none">
-  <div id="statusText" class="spinner"></div>
-  <div class="stat-card">XP: <span id="xp">0</span></div>
-  <div class="stat-card">Duit: <span id="money">0</span></div>
-  <div class="stat-card">Level: <span id="level">1</span></div>
-  <button class="primary" id="gainXpBtn">Tambah XP</button>
-  <button class="primary" id="earnMoneyBtn">Tambah Duit</button>
-  <button class="secondary" id="logoutBtn">Logout</button>
-</div>
+  <h1>Selamat datang ke DreamTown!</h1>  <div class="stat">XP: <span id="xp">0</span></div>
+  <div class="stat">Duit: <span id="money">0</span></div>
+  <div class="stat">Level: <span id="level">1</span></div><button id="gainXpBtn">Tambah XP</button> <button id="earnMoneyBtn">Tambah Duit</button>
 
-  </div>  <script type="module" src="src/js/firebase-config.js"></script>  <script type="module" src="src/js/firebase-auth.js"></script>  <script type="module" src="src/js/game.js"></script>  <script type="module" src="main.js"></script></body>
+  <hr>  <h2>Farming & Resources</h2>
+  <button id="farmPadiBtn">Tani Padi +5</button>
+  <button id="farmSayurBtn">Tani Sayur +5</button>
+  <button id="collectKayuBtn">Kumpul Kayu +5</button>
+  <button id="findKristalBtn">Cari Kristal +1</button><br><br> <button id="upgradeBtn">Upgrade Bangunan (RM500)</button>
+
+  <h3>Quest Harian:</h3>
+  <ul id="questList"></ul>  <script type="module" src="main.js"></script></body>
 </html>
