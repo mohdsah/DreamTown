@@ -33,3 +33,9 @@ function updateInventoryUI(inventory) {
   document.getElementById("invKristal").textContent = inventory.Kristal;
 }
 
+function updateInventoryUI(inventory) {
+  document.getElementById("invPadi").textContent = inventory.Padi;
+  document.getElementById("invSayur").textContent = inventory.Sayur;
+  document.getElementById("invKayu").textContent = inventory.Kayu;
+  document.getElementById("invKristal").textContent = inventory.Kristal;
+}
