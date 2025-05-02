@@ -1,20 +1,29 @@
 // src/js/marketplace.js
 
-import { getDatabase, ref, push, remove, onValue } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js"; import { updateInventoryUI } from "./inventory.js"; import { playerData, updateUI } from "./game-data.js";
+import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 
-const db = getDatabase(); const marketRef = ref(db, "marketplace");
+const db = getDatabase();
 
-export function postItemForSale(uid, itemName, quantity, price, callback) { if (!playerData.inventory[itemName] || playerData.inventory[itemName] < quantity) { alert("Anda tidak mempunyai item mencukupi untuk dijual."); return; }
+window.sellItem = async function () { const item = document.getElementById("sellItem").value; const qty = parseInt(document.getElementById("sellQty").value); const price = parseInt(document.getElementById("sellPrice").value);
 
-playerData.inventory[itemName] -= quantity; updateInventoryUI(playerData.inventory);
+if (qty > 0 && price > 0 && window.playerData.inventory[item] >= qty) { window.playerData.inventory[item] -= qty; await window.savePlayerData({ inventory: window.playerData.inventory });
 
-push(marketRef, { seller: uid, item: itemName, quantity: quantity, price: price }).then(() => { callback && callback(); }); }
+const marketRef = ref(db, "marketplace");
+push(marketRef, {
+  uid: window.auth?.currentUser?.uid || "anon",
+  item,
+  qty,
+  price
+});
 
-export function loadMarketplace(callback) { onValue(marketRef, (snapshot) => { const data = snapshot.val() || {}; callback(data); }); }
+alert("Item berjaya dijual!");
+loadMarketplace();
 
-export function buyItem(itemKey, itemData, currentUID, callback) { const totalCost = itemData.price; if (playerData.money < totalCost) { alert("Tidak cukup duit untuk membeli item ini."); return; }
+} else { alert("Input tidak sah atau stok tidak cukup."); } };
 
-playerData.money -= totalCost; if (!playerData.inventory[itemData.item]) playerData.inventory[itemData.item] = 0; playerData.inventory[itemData.item] += itemData.quantity; updateInventoryUI(playerData.inventory);
+window.loadMarketplace = function () { const marketRef = ref(db, "marketplace"); onValue(marketRef, (snapshot) => { const list = document.getElementById("marketList"); if (!list) return; list.innerHTML = ""; snapshot.forEach((child) => { const data = child.val(); const row = document.createElement("tr"); row.innerHTML = <td>${data.item}</td> <td>${data.qty}</td> <td>RM ${data.price}</td> <td><button onclick="buyItem('${child.key}', '${data.item}', ${data.qty}, ${data.price})">Beli</button></td>; list.appendChild(row); }); }); };
 
-remove(ref(db, marketplace/${itemKey})).then(() => { callback && callback(); }); }
+window.buyItem = async function (id, item, qty, price) { if (window.playerData.money >= price) { window.playerData.money -= price; window.playerData.inventory[item] += qty; await window.savePlayerData({ money: window.playerData.money, inventory: window.playerData.inventory }); remove(ref(db, "marketplace/" + id)); alert("Pembelian berjaya!"); loadMarketplace(); } else { alert("Duit tidak mencukupi."); } };
+
+// Auto load senarai marketplace selepas DOM window.addEventListener("DOMContentLoaded", () => { loadMarketplace(); });
 
