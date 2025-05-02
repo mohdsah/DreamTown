@@ -1,42 +1,75 @@
-// main.js
+import app from "./src/js/firebase-config.js";
+import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-import { updateXP, updateMoney, calculateLevel, getPlayerData } from "./src/js/game.js";
 
-// Pastikan user login dulu sebelum mula
-onAuthStateChanged(getAuth(), async (user) => {
+const db = getDatabase(app);
+const auth = getAuth();
+
+let currentUID = null;
+
+// UI element
+const xpEl = document.getElementById("xp");
+const moneyEl = document.getElementById("money");
+const levelEl = document.getElementById("level");
+const xpBtn = document.getElementById("gainXpBtn");
+const moneyBtn = document.getElementById("earnMoneyBtn");
+
+// Default data
+let userData = {
+  xp: 0,
+  money: 0,
+  level: 1,
+};
+
+function updateUI(data) {
+  xpEl.textContent = data.xp;
+  moneyEl.textContent = data.money;
+  levelEl.textContent = data.level;
+}
+
+function saveToFirebase() {
+  if (currentUID) {
+    const userRef = ref(db, "players/" + currentUID);
+    set(userRef, userData);
+  }
+}
+
+function setupGameListeners() {
+  xpBtn.addEventListener("click", () => {
+    userData.xp += 10;
+    if (userData.xp >= 100) {
+      userData.xp = 0;
+      userData.level += 1;
+    }
+    updateUI(userData);
+    saveToFirebase();
+  });
+
+  moneyBtn.addEventListener("click", () => {
+    userData.money += 50;
+    updateUI(userData);
+    saveToFirebase();
+  });
+}
+
+onAuthStateChanged(auth, (user) => {
   if (user) {
-    const uid = user.uid;
+    currentUID = user.uid;
+    const userRef = ref(db, "players/" + currentUID);
 
-    // Dapatkan data pemain dari game.js atau Firebase
-    const playerData = await getPlayerData(uid);
-
-    let xp = playerData.xp || 0;
-    let money = playerData.money || 0;
-    let level = calculateLevel(xp);
-
-    // Paparkan data pada UI
-    document.getElementById("xp").innerText = xp;
-    document.getElementById("money").innerText = money;
-    document.getElementById("level").innerText = level;
-
-    // Event: Tambah XP
-    document.getElementById("gainXpBtn").addEventListener("click", () => {
-      xp += 10;
-      level = calculateLevel(xp);
-      updateXP(uid, xp); // Simpan ke Firebase
-      document.getElementById("xp").innerText = xp;
-      document.getElementById("level").innerText = level;
+    onValue(userRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        userData = data;
+        updateUI(userData);
+      } else {
+        set(userRef, userData); // first time
+      }
     });
 
-    // Event: Tambah Duit
-    document.getElementById("earnMoneyBtn").addEventListener("click", () => {
-      money += 50;
-      updateMoney(uid, money); // Simpan ke Firebase
-      document.getElementById("money").innerText = money;
-    });
-
+    setupGameListeners();
   } else {
-    // Kalau belum login, redirect ke login.html
-    window.location.href = "login.html";
+    alert("Sila log masuk dahulu.");
+    // Anda boleh redirect ke login.html
   }
 });
