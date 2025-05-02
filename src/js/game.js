@@ -31,3 +31,16 @@ export function updateMoney(uid, money) {
   const db = getDatabase();
   return set(ref(db, `players/${uid}/money`), money);
 }
+
+import { showToast } from "./toast.js";
+
+function addResource(type, amount) {
+  if (playerData.inventory[type] !== undefined) {
+    playerData.inventory[type] += amount;
+    showToast(`${type} bertambah +${amount}`);
+    saveToFirebase();
+    updateUI();
+  } else {
+    showToast("Jenis item tidak sah!", "#f44336");
+  }
+}
