@@ -1,7 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="ms">
 <head>
+  <meta charset="UTF-8">
   <title>Login - DreamTown</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #eef;
+      text-align: center;
+      padding: 50px;
+    }
+
+    input, button {
+      font-size: 16px;
+      padding: 10px;
+      margin: 8px;
+      width: 220px;
+    }
+
+    .form-box {
+      background: white;
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <h2>DreamTown - Login</h2>
+  <div class="form-box">
+    <input type="email" id="email" placeholder="Email"><br>
+    <input type="password" id="password" placeholder="Password"><br>
+    <button onclick="login()">Login</button>
+    <button onclick="register()">Daftar Akaun</button>
+    <p id="status"></p>
+  </div>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
@@ -13,7 +49,8 @@
       storageBucket: "dreamtowndemo.firebasestorage.app",
       messagingSenderId: "388188231244",
       appId: "1:388188231244:web:c76651908a0c14f0ee06e9",
-      measurementId: "G-YY3JMP7L13"
+      measurementId: "G-YY3JMP7L13",
+      databaseURL: "https://dreamtowndemo-default-rtdb.asia-southeast1.firebasedatabase.app/"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -22,29 +59,28 @@
     window.login = function () {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
+
       signInWithEmailAndPassword(auth, email, password)
         .then(() => {
-          window.location.href = "main.html";
+          window.location.href = "main.html"; // Ganti dengan halaman game kamu
         })
-        .catch(err => alert("Login failed: " + err.message));
-    };
+        .catch(error => {
+          document.getElementById("status").innerText = "Login gagal: " + error.message;
+        });
+    }
 
     window.register = function () {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
+
       createUserWithEmailAndPassword(auth, email, password)
         .then(() => {
-          alert("Akaun berjaya didaftarkan!");
+          document.getElementById("status").innerText = "Akaun berjaya didaftarkan!";
         })
-        .catch(err => alert("Pendaftaran gagal: " + err.message));
-    };
+        .catch(error => {
+          document.getElementById("status").innerText = "Pendaftaran gagal: " + error.message;
+        });
+    }
   </script>
-</head>
-<body>
-  <h2>Login DreamTown</h2>
-  <input id="email" type="email" placeholder="Email"><br>
-  <input id="password" type="password" placeholder="Password"><br><br>
-  <button onclick="login()">Login</button>
-  <button onclick="register()">Daftar</button>
 </body>
 </html>
