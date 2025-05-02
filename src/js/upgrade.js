@@ -1,6 +1,18 @@
 // src/js/upgrade.js
 
-import { savePlayerData } from "./firebase-game.js"; import { showToast } from "./toast.js"; import { playerData, updateUI } from "./game-data.js";
+window.upgradeBuilding = async function () { const upgradeCost = 500;
 
-export async function upgradeBuilding() { const cost = 500; if (playerData.money >= cost) { playerData.money -= cost; playerData.level += 1; await savePlayerData({ money: playerData.money, level: playerData.level }); showToast("Bangunan berjaya dinaik taraf!", "#4caf50"); updateUI(); } else { showToast("Tidak cukup duit untuk upgrade!", "#f44336"); } }
+if (window.playerData.money >= upgradeCost) { window.playerData.money -= upgradeCost; window.playerData.level += 1;
+
+await window.savePlayerData({
+  money: window.playerData.money,
+  level: window.playerData.level
+});
+
+document.getElementById("money").innerText = window.playerData.money;
+document.getElementById("level").innerText = window.playerData.level;
+
+alert("Bangunan telah dinaik taraf!");
+
+} else { alert("Duit tidak mencukupi untuk upgrade."); } };
 
