@@ -1,81 +1,28 @@
-import app from "./src/js/firebase-config.js";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+// main.js
 
-const auth = getAuth(app);
+import app from "./src/js/firebase-config.js"; import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js"; import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js"; import { addResource, upgradeBuilding } from "./src/js/farming.js"; import { DailyQuest } from "./src/js/quests.js";
 
-// Element
-const loginPanel = document.getElementById("loginPanel");
-const gamePanel = document.getElementById("gamePanel");
-const emailInput = document.getElementById("emailInput");
-const passwordInput = document.getElementById("passwordInput");
-const loginBtn = document.getElementById("loginBtn");
-const registerBtn = document.getElementById("registerBtn");
-const logoutBtn = document.getElementById("logoutBtn");
+const db = getDatabase(app); const auth = getAuth();
 
-// LOGIN
-if (loginBtn) {
-  loginBtn.addEventListener("click", () => {
-    const email = emailInput.value;
-    const password = passwordInput.value;
+let currentUID = null; let playerData = { money: 0, level: 1, inventory: { Padi: 0, Sayur: 0, Kayu: 0, Kristal: 0 }, questProgress: {} };
 
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        console.log("Login berjaya");
-        window.location.href = "index.html"; // Redirect ke game
-      })
-      .catch((err) => {
-        alert("Login gagal: " + err.message);
-      });
-  });
-}
+const xpEl = document.getElementById("xp"); const moneyEl = document.getElementById("money"); const levelEl = document.getElementById("level");
 
-// REGISTER
-if (registerBtn) {
-  registerBtn.addEventListener("click", () => {
-    const email = emailInput.value;
-    const password = passwordInput.value;
+const xpBtn = document.getElementById("gainXpBtn"); const moneyBtn = document.getElementById("earnMoneyBtn");
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        alert("Akaun berjaya didaftarkan!");
-      })
-      .catch((err) => {
-        alert("Daftar gagal: " + err.message);
-      });
-  });
-}
+function updateUI() { if (moneyEl) moneyEl.textContent = playerData.money; if (levelEl) levelEl.textContent = playerData.level; if (xpEl) xpEl.textContent = playerData.xp || 0; }
 
-// LOGOUT
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", () => {
-    signOut(auth).then(() => {
-      window.location.href = "login.html";
-    });
-  });
-}
+function savePlayerData(data) { if (!currentUID) return; const userRef = ref(db, players/${currentUID}); Object.assign(playerData, data); set(userRef, playerData); }
 
-// PAPAR PANEL ikut login status
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    if (loginPanel) loginPanel.style.display = "none";
-    if (gamePanel) gamePanel.style.display = "block";
-  } else {
-    if (loginPanel) loginPanel.style.display = "block";
-    if (gamePanel) gamePanel.style.display = "none";
-  }
-});
+onAuthStateChanged(auth, async (user) => { if (user) { currentUID = user.uid; const userRef = ref(db, players/${currentUID}); onValue(userRef, async (snapshot) => { const data = snapshot.val(); if (data) playerData = data; updateUI(); await DailyQuest.init(playerData, savePlayerData); }); setupButtons(); } else { alert("Sila log masuk dahulu."); window.location.href = "login.html"; } });
 
-function showToast(message) {
-  const toast = document.getElementById("toast");
-  toast.textContent = message;
-  toast.classList.add("show");
-  setTimeout(() => {
-    toast.classList.remove("show");
-  }, 3000);
-}
+function setupButtons() { const farmingButtons = { Padi: document.getElementById("farmPadiBtn"), Sayur: document.getElementById("farmSayurBtn"), Kayu: document.getElementById("collectKayuBtn"), Kristal: document.getElementById("findKristalBtn") };
+
+for (const type in farmingButtons) { if (farmingButtons[type]) { farmingButtons[type].addEventListener("click", () => { if (addResource(playerData, type, 5)) { DailyQuest.update(playerData, type, savePlayerData); updateUI(); } }); } }
+
+const upgradeBtn = document.getElementById("upgradeBtn"); if (upgradeBtn) { upgradeBtn.addEventListener("click", () => { const result = upgradeBuilding(playerData); if (result === "Berjaya") alert("Bangunan dinaik taraf!"); else alert("Tidak cukup duit untuk upgrade!"); updateUI(); }); }
+
+if (xpBtn) { xpBtn.addEventListener("click", () => { playerData.xp = (playerData.xp || 0) + 10; if (playerData.xp >= 100) { playerData.xp = 0; playerData.level++; } savePlayerData({ xp: playerData.xp, level: playerData.level }); updateUI(); }); }
+
+if (moneyBtn) { moneyBtn.addEventListener("click", () => { playerData.money += 50; savePlayerData({ money: playerData.money }); updateUI(); }); } }
+
