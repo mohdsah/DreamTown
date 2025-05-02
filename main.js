@@ -1,86 +1,72 @@
 import app from "./src/js/firebase-config.js";
-import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
-const db = getDatabase(app);
-const auth = getAuth();
+const auth = getAuth(app);
 
-let currentUID = null;
+// Element
+const loginPanel = document.getElementById("loginPanel");
+const gamePanel = document.getElementById("gamePanel");
+const emailInput = document.getElementById("emailInput");
+const passwordInput = document.getElementById("passwordInput");
+const loginBtn = document.getElementById("loginBtn");
+const registerBtn = document.getElementById("registerBtn");
+const logoutBtn = document.getElementById("logoutBtn");
 
-// UI element
-const xpEl = document.getElementById("xp");
-const moneyEl = document.getElementById("money");
-const levelEl = document.getElementById("level");
-const xpBtn = document.getElementById("gainXpBtn");
-const moneyBtn = document.getElementById("earnMoneyBtn");
+// LOGIN
+if (loginBtn) {
+  loginBtn.addEventListener("click", () => {
+    const email = emailInput.value;
+    const password = passwordInput.value;
 
-// Default data
-let userData = {
-  xp: 0,
-  money: 0,
-  level: 1,
-};
-
-function updateUI(data) {
-  xpEl.textContent = data.xp;
-  moneyEl.textContent = data.money;
-  levelEl.textContent = data.level;
-}
-
-function saveToFirebase() {
-  if (currentUID) {
-    const userRef = ref(db, "players/" + currentUID);
-    set(userRef, userData);
-  }
-}
-
-function setupGameListeners() {
-  xpBtn.addEventListener("click", () => {
-    userData.xp += 10;
-    if (userData.xp >= 100) {
-      userData.xp = 0;
-      userData.level += 1;
-    }
-    updateUI(userData);
-    saveToFirebase();
-  });
-
-  moneyBtn.addEventListener("click", () => {
-    userData.money += 50;
-    updateUI(userData);
-    saveToFirebase();
+    signInWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        console.log("Login berjaya");
+        window.location.href = "index.html"; // Redirect ke game
+      })
+      .catch((err) => {
+        alert("Login gagal: " + err.message);
+      });
   });
 }
 
+// REGISTER
+if (registerBtn) {
+  registerBtn.addEventListener("click", () => {
+    const email = emailInput.value;
+    const password = passwordInput.value;
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        alert("Akaun berjaya didaftarkan!");
+      })
+      .catch((err) => {
+        alert("Daftar gagal: " + err.message);
+      });
+  });
+}
+
+// LOGOUT
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+    signOut(auth).then(() => {
+      window.location.href = "login.html";
+    });
+  });
+}
+
+// PAPAR PANEL ikut login status
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    currentUID = user.uid;
-    const userRef = ref(db, "players/" + currentUID);
-
-    onValue(userRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        userData = data;
-        updateUI(userData);
-      } else {
-        set(userRef, userData); // first time
-      }
-    });
-
-    setupGameListeners();
+    if (loginPanel) loginPanel.style.display = "none";
+    if (gamePanel) gamePanel.style.display = "block";
   } else {
-    alert("Sila log masuk dahulu.");
-    // Anda boleh redirect ke login.html
+    if (loginPanel) loginPanel.style.display = "block";
+    if (gamePanel) gamePanel.style.display = "none";
   }
-});
-
-document.getElementById("logoutBtn").addEventListener("click", () => {
-  signOut(auth).then(() => {
-    // Sembunyikan panel game, tunjuk login semula
-    document.getElementById("gamePanel").style.display = "none";
-    document.getElementById("loginPanel").style.display = "block";
-    alert("Berjaya log keluar.");
-  }).catch((error) => {
-    alert("Ralat semasa log keluar: " + error.message);
-  });
 });
