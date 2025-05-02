@@ -90,3 +90,38 @@ button:hover {
     transform: rotate(360deg);
   }
 }
+
+/* Responsive layout */
+@media (max-width: 768px) {
+  .panel-box,
+  .glass,
+  .admin-container {
+    width: 90%;
+    padding: 20px;
+  }
+
+  input, button {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  table th, table td {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .admin-btn {
+    font-size: 15px;
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  h1, h2 {
+    font-size: 20px;
+  }
+
+  .stat-card {
+    font-size: 14px;
+  }
+}
