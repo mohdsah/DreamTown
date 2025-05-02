@@ -1,19 +1,17 @@
-
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html lang="ms">
 <head>
-    <title>Admin Town - DreamTown</title>
-    <script type="module" src="adminTown.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AdminTown Panel - DreamTown</title>
+  <link rel="stylesheet" href="src/admin/css/admin-style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Admin Dashboard</h1>
-    <div id="adminPanel">
-        <input type="password" id="adminKey" placeholder="Enter Admin Key" />
-        <button onclick="checkAdmin()">Login</button>
-        <div id="adminControls" style="display:none;">
-            <h2>Player List</h2>
-            <div id="playerList">Loading...</div>
-        </div>
-    </div>
-</body>
+  <div class="panel-box">
+    <h2>Panel Bandar Admin</h2>
+    <p>Akses khas untuk pentadbir DreamTown</p><button class="admin-btn" onclick="tambahDuitSemua()">Tambah 100 Duit Kepada Semua</button>
+<button class="admin-btn" onclick="naikkanLevelSemua()">Naikkan Semua Pemain ke Level 5</button>
+<button class="admin-btn" onclick="resetXpSemua()">Reset XP Semua Pemain</button>
+
+  </div>  <script type="module" src="src/js/admin/admin-panel.js"></script></body>
 </html>
