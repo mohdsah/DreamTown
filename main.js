@@ -1,93 +1,6 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-
-// Firebase Config
-const firebaseConfig = {
-  apiKey: "AIzaSyABbbqTjJ0AQUlOVzv6SJtnjUCAWKjnQK8",
-  authDomain: "dreamtowndemo.firebaseapp.com",
-  databaseURL: "https://dreamtowndemo-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "dreamtowndemo",
-  storageBucket: "dreamtowndemo.appspot.com",
-  messagingSenderId: "388188231244",
-  appId: "1:388188231244:web:c76651908a0c14f0ee06e9"
-};
-
-// Init
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const auth = getAuth();
-
-let currentUID = null;
-let playerData = {
-  xp: 0,
-  money: 0,
-  level: 1,
-  inventory: { Padi: 0, Sayur: 0, Kayu: 0, Kristal: 0 }
-};
-
-function updateUI() {
-  document.getElementById("xp").innerText = playerData.xp;
-  document.getElementById("money").innerText = playerData.money;
-  document.getElementById("level").innerText = playerData.level;
-  document.getElementById("padiCount").innerText = playerData.inventory.Padi;
-  document.getElementById("sayurCount").innerText = playerData.inventory.Sayur;
-  document.getElementById("kayuCount").innerText = playerData.inventory.Kayu;
-  document.getElementById("kristalCount").innerText = playerData.inventory.Kristal;
-}
-
-function savePlayerData() {
-  if (currentUID) {
-    set(ref(db, "players/" + currentUID), playerData);
-  }
-}
-
-function setupEvents() {
-  document.getElementById("gainXpBtn").onclick = () => {
-    playerData.xp += 10;
-    if (playerData.xp >= 100) {
-      playerData.xp = 0;
-      playerData.level += 1;
-    }
-    updateUI();
-    savePlayerData();
-  };
-
-  document.getElementById("earnMoneyBtn").onclick = () => {
-    playerData.money += 50;
-    updateUI();
-    savePlayerData();
-  };
-}
-
-window.addResource = function(item, amount) {
-  if (playerData.inventory[item] !== undefined) {
-    playerData.inventory[item] += amount;
-    updateUI();
-    savePlayerData();
-  }
-};
-
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    currentUID = user.uid;
-    const userRef = ref(db, "players/" + currentUID);
-    onValue(userRef, (snapshot) => {
-      if (snapshot.exists()) {
-        playerData = snapshot.val();
-        updateUI();
-      } else {
-        savePlayerData(); // First time user
-      }
-    });
-    setupEvents();
-  } else {
-    alert("Sila log masuk dahulu.");
-    window.location.href = "login.html";
-  }
-});
-
-import { loadPlayerData, savePlayerData } from "./firebase-game.js";
+// main.js
+import { loadPlayerData, savePlayerData } from "./src/js/firebase-game.js";
+import { DailyQuest } from "./src/js/daily-quest.js";
 
 window.playerData = {
   xp: 0,
@@ -97,36 +10,71 @@ window.playerData = {
     Padi: 0,
     Sayur: 0,
     Kayu: 0,
-    Kristal: 0
-  }
+    Kristal: 0,
+  },
 };
 
-window.addEventListener("DOMContentLoaded", async () => {
-  const data = await loadPlayerData();
-  if (data) window.playerData = data;
-  updateUI();
-});
+function updateUI() {
+  document.getElementById("xp").textContent = window.playerData.xp;
+  document.getElementById("money").textContent = window.playerData.money;
+  document.getElementById("level").textContent = window.playerData.level;
 
-gainXpBtn.addEventListener("click", () => {
-  playerData.xp += 10;
-  if (playerData.xp >= 100) {
-    playerData.xp = 0;
-    playerData.level += 1;
-  }
-  updateUI();
-  savePlayerData();
-});
-
-addResource("Padi", 5);
-
-function addResource(type, amount) {
-  if (playerData.inventory[type] !== undefined) {
-    playerData.inventory[type] += amount;
-    updateUI();
-    savePlayerData();
+  if (document.getElementById("inventoryDisplay")) {
+    const inv = window.playerData.inventory;
+    document.getElementById("inventoryDisplay").innerHTML =
+      `Padi: ${inv.Padi}<br>Sayur: ${inv.Sayur}<br>Kayu: ${inv.Kayu}<br>Kristal: ${inv.Kristal}`;
   }
 }
 
-setInterval(() => {
-  savePlayerData();
-}, 10000); // 10 saat
+async function initGame() {
+  const data = await loadPlayerData();
+  if (data) window.playerData = data;
+  updateUI();
+  DailyQuest.init(window.playerData, savePlayerData);
+}
+
+window.addEventListener("DOMContentLoaded", initGame);
+
+window.addXp = async function () {
+  window.playerData.xp += 10;
+  if (window.playerData.xp >= 100) {
+    window.playerData.xp = 0;
+    window.playerData.level += 1;
+  }
+  await savePlayerData({
+    xp: window.playerData.xp,
+    level: window.playerData.level,
+  });
+  updateUI();
+};
+
+window.addMoney = async function () {
+  window.playerData.money += 50;
+  await savePlayerData({ money: window.playerData.money });
+  updateUI();
+};
+
+window.addResource = async function (type, amount) {
+  if (window.playerData.inventory[type] !== undefined) {
+    window.playerData.inventory[type] += amount;
+    await savePlayerData({ inventory: window.playerData.inventory });
+    updateUI();
+    DailyQuest.render(window.playerData, savePlayerData);
+  }
+};
+
+window.upgradeBuilding = async function () {
+  const cost = 500;
+  if (window.playerData.money >= cost) {
+    window.playerData.money -= cost;
+    window.playerData.level += 1;
+    await savePlayerData({
+      money: window.playerData.money,
+      level: window.playerData.level,
+    });
+    alert("Bangunan telah dinaik taraf!");
+    updateUI();
+  } else {
+    alert("Tidak cukup duit untuk upgrade.");
+  }
+};
