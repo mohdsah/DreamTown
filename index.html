@@ -25,6 +25,32 @@
   <button class="btn" onclick="addResource('Kayu', 5)">Kumpul Kayu +5</button>
   <button class="btn" onclick="addResource('Kristal', 1)">Cari Kristal +1</button>
 
+<hr>
+<h2>Marketplace</h2>
+<select id="sellItem">
+  <option value="Padi">Padi</option>
+  <option value="Sayur">Sayur</option>
+  <option value="Kayu">Kayu</option>
+  <option value="Kristal">Kristal</option>
+</select>
+<input type="number" id="sellQty" placeholder="Qty" />
+<input type="number" id="sellPrice" placeholder="Harga (RM)" />
+<button id="sellBtn">Jual</button>
+
+<h3>Senarai Jualan Pemain</h3>
+<table border="1">
+  <thead>
+    <tr>
+      <th>Item</th>
+      <th>Qty</th>
+      <th>Harga</th>
+      <th>Tindakan</th>
+    </tr>
+  </thead>
+  <tbody id="marketList"></tbody>
+</table>
+  
+  
   <p>Padi: <span id="padiCount">0</span></p>
   <p>Sayur: <span id="sayurCount">0</span></p>
   <p>Kayu: <span id="kayuCount">0</span></p>
