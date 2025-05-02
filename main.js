@@ -38,6 +38,17 @@ postItemForSale(currentUID, item, qty, price, playerData.inventory, () => {
   savePlayerData();
 });
 
+                                                                          export function showToast(message, color = "#4caf50") {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.style.background = color;
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2500);
+                                                                          }
+                                                                          
 }); }
 
 function displayMarketplace(data) { const list = document.getElementById("marketList"); list.innerHTML = ""; for (const key in data) { const item = data[key]; const row = document.createElement("tr"); row.innerHTML = <td>${item.item}</td> <td>${item.quantity}</td> <td>${item.price}</td> <td><button onclick="buyItemHandler('${key}')">Beli</button></td>; list.appendChild(row); } }
