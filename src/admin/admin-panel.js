@@ -25,7 +25,6 @@ const resetBtn = document.createElement("button");
   container.appendChild(rareBtn);
 }
 
-// Muat log aktiviti
 loadActivityLogs();
 
 } });
@@ -41,4 +40,8 @@ async function resetSemuaData() { toggleSpinner(true); const snapshot = await ge
 async function beriItemRare() { toggleSpinner(true); const snapshot = await get(ref(db, "players")); if (snapshot.exists()) { const players = snapshot.val(); for (const uid in players) { await set(ref(db, inventory/${uid}/rareItem), true); } toggleSpinner(false); showToast("Item rare telah diberikan kepada semua pemain."); logActivity("Beri item rare kepada semua pemain"); } }
 
 async function loadActivityLogs() { const logList = document.getElementById("activityLog"); if (!logList) return; const snapshot = await get(ref(db, "logs")); if (snapshot.exists()) { const logs = snapshot.val(); const entries = Object.values(logs).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); logList.innerHTML = ""; for (const log of entries) { const li = document.createElement("li"); li.textContent = [${log.timestamp.slice(0, 19).replace("T", " ")}] ${log.email} - ${log.action}; logList.appendChild(li); } } }
+
+window.hantarNotifikasi = async function () { const mesej = prompt("Masukkan mesej notifikasi untuk semua pemain:"); if (!mesej) return;
+
+toggleSpinner(true); const snapshot = await get(ref(db, "players")); if (snapshot.exists()) { const players = snapshot.val(); const timestamp = new Date().toISOString(); for (const uid in players) { await push(ref(db, notifications/${uid}), { message: mesej, timestamp }); } toggleSpinner(false); showToast("Notifikasi dihantar kepada semua pemain."); logActivity(Hantar notifikasi kepada semua: ${mesej}); } }
 
