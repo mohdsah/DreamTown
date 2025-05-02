@@ -1,8 +1,7 @@
-// main.js
-import { loadPlayerData, savePlayerData } from "./src/js/firebase-game.js";
-import { DailyQuest } from "./src/js/daily-quest.js";
+import { loadPlayerData, savePlayerData } from './src/js/firebase-game.js';
+import { DailyQuest } from './src/js/daily-quest.js';
 
-window.playerData = {
+let playerData = {
   xp: 0,
   money: 0,
   level: 1,
@@ -10,71 +9,55 @@ window.playerData = {
     Padi: 0,
     Sayur: 0,
     Kayu: 0,
-    Kristal: 0,
-  },
+    Kristal: 0
+  }
 };
+
+window.addEventListener("DOMContentLoaded", async () => {
+  const saved = await loadPlayerData();
+  if (saved) playerData = saved;
+
+  updateUI();
+  await DailyQuest.init(playerData, savePlayerData);
+});
 
 function updateUI() {
-  document.getElementById("xp").textContent = window.playerData.xp;
-  document.getElementById("money").textContent = window.playerData.money;
-  document.getElementById("level").textContent = window.playerData.level;
-
-  if (document.getElementById("inventoryDisplay")) {
-    const inv = window.playerData.inventory;
-    document.getElementById("inventoryDisplay").innerHTML =
-      `Padi: ${inv.Padi}<br>Sayur: ${inv.Sayur}<br>Kayu: ${inv.Kayu}<br>Kristal: ${inv.Kristal}`;
-  }
+  document.getElementById("xp").innerText = playerData.xp;
+  document.getElementById("money").innerText = playerData.money;
+  document.getElementById("level").innerText = playerData.level;
+  document.getElementById("padi").innerText = playerData.inventory.Padi;
+  document.getElementById("sayur").innerText = playerData.inventory.Sayur;
+  document.getElementById("kayu").innerText = playerData.inventory.Kayu;
+  document.getElementById("kristal").innerText = playerData.inventory.Kristal;
 }
 
-async function initGame() {
-  const data = await loadPlayerData();
-  if (data) window.playerData = data;
+document.getElementById("gainXpBtn").addEventListener("click", async () => {
+  playerData.xp += 10;
+  await savePlayerData({ xp: playerData.xp });
   updateUI();
-  DailyQuest.init(window.playerData, savePlayerData);
-}
+});
 
-window.addEventListener("DOMContentLoaded", initGame);
-
-window.addXp = async function () {
-  window.playerData.xp += 10;
-  if (window.playerData.xp >= 100) {
-    window.playerData.xp = 0;
-    window.playerData.level += 1;
-  }
-  await savePlayerData({
-    xp: window.playerData.xp,
-    level: window.playerData.level,
-  });
+document.getElementById("earnMoneyBtn").addEventListener("click", async () => {
+  playerData.money += 50;
+  await savePlayerData({ money: playerData.money });
   updateUI();
-};
+});
 
-window.addMoney = async function () {
-  window.playerData.money += 50;
-  await savePlayerData({ money: window.playerData.money });
-  updateUI();
-};
-
-window.addResource = async function (type, amount) {
-  if (window.playerData.inventory[type] !== undefined) {
-    window.playerData.inventory[type] += amount;
-    await savePlayerData({ inventory: window.playerData.inventory });
+window.addResource = async function(type, amount) {
+  if (playerData.inventory[type] !== undefined) {
+    playerData.inventory[type] += amount;
+    await savePlayerData({ inventory: playerData.inventory });
     updateUI();
-    DailyQuest.render(window.playerData, savePlayerData);
+    DailyQuest.render(playerData, savePlayerData);
   }
 };
 
-window.upgradeBuilding = async function () {
+window.upgradeBuilding = async function() {
   const cost = 500;
-  if (window.playerData.money >= cost) {
-    window.playerData.money -= cost;
-    window.playerData.level += 1;
-    await savePlayerData({
-      money: window.playerData.money,
-      level: window.playerData.level,
-    });
+  if (playerData.money >= cost) {
+    playerData.money -= cost;
+    playerData.level += 1;
+    await savePlayerData({ money: playerData.money, level: playerData.level });
     alert("Bangunan telah dinaik taraf!");
     updateUI();
   } else {
-    alert("Tidak cukup duit untuk upgrade.");
-  }
-};
