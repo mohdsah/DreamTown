@@ -1,0 +1,42 @@
+<!DOCTYPE html><html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - DreamTown</title>
+  <link rel="stylesheet" href="main.css">
+  <style>
+    body {
+      background: linear-gradient(to right, #dbeafe, #e0f2f1);
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .login-box {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      width: 300px;
+      text-align: center;
+    }
+    input, button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h2>Admin Login</h2>
+    <input id="adminEmail" placeholder="Email Admin" type="email">
+<input id="adminPassword" placeholder="Password" type="password">
+<button id="adminLoginBtn">Login</button>
+<p id="loginStatus"></p>
+  </div>
+  <script type="module" src="src/js/admin/admin-login.js"></script>
+</body>
+</html>
