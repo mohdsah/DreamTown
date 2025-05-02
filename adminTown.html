@@ -13,6 +13,7 @@
     <p>Akses khas untuk pentadbir DreamTown</p><button class="admin-btn" onclick="tambahDuitSemua()">Tambah 100 Duit Kepada Semua</button>
 <button class="admin-btn" onclick="naikkanLevelSemua()">Naikkan Semua Pemain ke Level 5</button>
 <button class="admin-btn" onclick="resetXpSemua()">Reset XP Semua Pemain</button>
+<button class="admin-btn" onclick="logoutAdmin()">Logout</button>
 
   </div>  <!-- Spinner & Toast -->  <div id="toast" class="toast">Notifikasi</div>
   <div id="spinner" class="spinner" style="display: none;"></div>  <!-- Script Admin Panel -->  <script type="module" src="src/js/admin/admin-panel.js"></script>  <script>
@@ -28,6 +29,18 @@
     function toggleSpinner(show) {
       const spinner = document.getElementById("spinner");
       spinner.style.display = show ? "block" : "none";
+    }
+
+    function logoutAdmin() {
+      import("https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js").then(({ getAuth, signOut }) => {
+        const auth = getAuth();
+        signOut(auth).then(() => {
+          showToast("Anda telah logout.");
+          setTimeout(() => {
+            window.location.href = "login.html";
+          }, 1500);
+        });
+      });
     }
   </script></body>
 </html>
