@@ -111,3 +111,16 @@ window.buyItem = function (id, item, qty, price) {
 };
 
 loadMarket();
+
+import { savePlayerData, loadPlayerData } from "./firebase-game.js";
+
+// Contoh bila tambah XP
+gainXpBtn.addEventListener("click", () => {
+  playerData.xp += 10;
+  if (playerData.xp >= 100) {
+    playerData.xp = 0;
+    playerData.level += 1;
+  }
+  updateUI();
+  savePlayerData();
+});
