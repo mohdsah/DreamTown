@@ -22,6 +22,11 @@
 <button class="admin-btn" onclick="resetXpSemua()">Reset XP Semua Pemain</button>
 <button class="admin-btn" onclick="logoutAdmin()">Logout</button>
 
+<div class="stat-card" style="margin-top: 30px;">
+  <h3>Log Aktiviti Admin</h3>
+  <ul id="activityLog" style="list-style: none; padding-left: 0;"></ul>
+</div>
+
   </div>  <!-- Spinner & Toast -->  <div id="toast" class="toast">Notifikasi</div>
   <div id="spinner" class="spinner" style="display: none;"></div>  <!-- Script Admin Panel -->  <script type="module" src="src/js/admin/admin-panel.js"></script>  <script>
     function showToast(message) {
