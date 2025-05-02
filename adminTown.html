@@ -3,6 +3,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AdminTown Panel - DreamTown</title>
+  <link rel="stylesheet" href="main.css">
   <link rel="stylesheet" href="src/admin/css/admin-style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
@@ -13,5 +14,20 @@
 <button class="admin-btn" onclick="naikkanLevelSemua()">Naikkan Semua Pemain ke Level 5</button>
 <button class="admin-btn" onclick="resetXpSemua()">Reset XP Semua Pemain</button>
 
-  </div>  <script type="module" src="src/js/admin/admin-panel.js"></script></body>
+  </div>  <!-- Spinner & Toast -->  <div id="toast" class="toast">Notifikasi</div>
+  <div id="spinner" class="spinner" style="display: none;"></div>  <!-- Script Admin Panel -->  <script type="module" src="src/js/admin/admin-panel.js"></script>  <script>
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3000);
+    }
+
+    function toggleSpinner(show) {
+      const spinner = document.getElementById("spinner");
+      spinner.style.display = show ? "block" : "none";
+    }
+  </script></body>
 </html>
