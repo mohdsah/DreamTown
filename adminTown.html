@@ -10,7 +10,7 @@
 <body>
   <div class="panel-box">
     <h2>Panel Bandar Admin</h2>
-    <p>Akses khas untuk pentadbir DreamTown</p><div class="stat-card" id="statsPanel">
+    <p id="adminRole">Akses khas untuk pentadbir DreamTown</p><div class="stat-card" id="statsPanel">
   <h3>Statistik Pemain</h3>
   <p><strong>Jumlah Pemain:</strong> <span id="totalPlayers">...</span></p>
   <p><strong>Purata Level:</strong> <span id="avgLevel">...</span></p>
@@ -72,6 +72,16 @@
           document.getElementById("topMoney").textContent = topMoney;
         } else {
           statsPanel.style.display = "none";
+        }
+      });
+    });
+
+    // Tanda Super Admin jika perlu
+    import("https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js").then(({ getAuth, onAuthStateChanged }) => {
+      const auth = getAuth();
+      onAuthStateChanged(auth, user => {
+        if (user && user.email === "super@dreamtown.com") {
+          document.getElementById("adminRole").innerHTML = '<span style="color: #f43f5e; font-weight: bold;">Akses: Super Admin</span>';
         }
       });
     });
