@@ -1,132 +1,30 @@
-body {
-  background: url('background.jpg') no-repeat center center/cover;
-  font-family: 'Poppins', sans-serif;
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
+/* main.css - UI Premium Final Version */
 
-.glass {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 16px;
-  padding: 30px;
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-  backdrop-filter: blur(8px);
-  color: #fff;
-  text-align: center;
-}
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-.primary {
-  background: #4fc3f7;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 12px;
-  margin-top: 10px;
-  cursor: pointer;
-  font-weight: bold;
-}
+body { font-family: 'Poppins', sans-serif; background: linear-gradient(to right, #dbeafe, #e0f7fa); margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-.secondary {
-  background: transparent;
-  color: #fff;
-  border: 1px solid #fff;
-  padding: 8px 16px;
-  border-radius: 12px;
-  margin-top: 10px;
-}
+h1, h2 { color: #1e3a8a; margin-bottom: 20px; text-align: center; }
 
-.toast {
-  visibility: hidden;
-  min-width: 250px;
-  background-color: #333;
-  color: #fff;
-  text-align: center;
-  border-radius: 8px;
-  padding: 12px;
-  position: fixed;
-  z-index: 1000;
-  left: 50%;
-  bottom: 30px;
-  transform: translateX(-50%);
-  font-size: 16px;
-  opacity: 0;
-  transition: opacity 0.5s ease, bottom 0.5s ease;
-}
+input, button { padding: 12px 16px; margin: 8px 0; width: 280px; font-size: 16px; border: 1px solid #d1d5db; border-radius: 8px; box-sizing: border-box; }
 
-.toast.show {
-  visibility: visible;
-  opacity: 1;
-  bottom: 50px;
-}
+button { background-color: #2563eb; color: white; font-weight: bold; cursor: pointer; transition: all 0.3s ease; }
 
-button {
-  transition: transform 0.1s ease-in-out;
-}
+button:hover { background-color: #1d4ed8; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
 
-button:active {
-  transform: scale(0.96);
-}
+button:active { transform: scale(0.96); }
 
-button:hover {
-  background-color: #38bdf8; /* warna hover */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
+#loginPanel, #gamePanel { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin-top: 20px; transition: opacity 0.5s ease-in-out; width: 350px; max-width: 95%; }
 
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 20px auto;
-}
+.stat { margin: 10px; font-size: 18px; }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
+/* Toast Notification */ .toast { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 8px; padding: 12px; position: fixed; z-index: 1000; left: 50%; bottom: 30px; transform: translateX(-50%); font-size: 16px; opacity: 0; transition: opacity 0.5s ease, bottom 0.5s ease; } .toast.show { visibility: visible; opacity: 1; bottom: 50px; }
 
-/* Responsive layout */
-@media (max-width: 768px) {
-  .panel-box,
-  .glass,
-  .admin-container {
-    width: 90%;
-    padding: 20px;
-  }
+/* Spinner */ .spinner { width: 40px; height: 40px; border: 4px solid rgba(255, 255, 255, 0.3); border-top-color: #2563eb; border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
 
-  input, button {
-    width: 100%;
-    font-size: 16px;
-  }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-  table th, table td {
-    font-size: 14px;
-    padding: 10px;
-  }
+/* Responsive */ @media (max-width: 768px) { #loginPanel, #gamePanel, .panel-box { width: 90%; padding: 20px; } input, button { width: 100%; font-size: 16px; } .stat { font-size: 16px; } }
 
-  .admin-btn {
-    font-size: 15px;
-    padding: 10px 12px;
-  }
-}
+@media (max-width: 480px) { h1, h2 { font-size: 20px; } .stat { font-size: 14px; } }
 
-@media (max-width: 480px) {
-  h1, h2 {
-    font-size: 20px;
-  }
-
-  .stat-card {
-    font-size: 14px;
-  }
-}
-
-input, button {
-  max-width: 100%;
-  box-sizing: border-box;
-}
