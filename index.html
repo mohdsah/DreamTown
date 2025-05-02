@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="ms">
+<!DOCTYPE html><html lang="ms">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -24,47 +23,48 @@
       font-weight: bold;
       cursor: pointer;
     }
-    button:hover {
-      background: #2563eb;
-    }
-    hr {
-      margin: 20px 0;
+    button:hover { background: #2563eb; }
+    hr { margin: 20px 0; }
+    select, input[type="number"] {
+      padding: 5px;
+      margin: 5px;
+      font-size: 16px;
     }
   </style>
 </head>
-<body>
-
-  <h1>Selamat datang ke DreamTown!</h1>
-
-  <div class="stat">XP: <span id="xp">0</span></div>
+<body>  <h1>Selamat datang ke DreamTown!</h1>  <div class="stat">XP: <span id="xp">0</span></div>
   <div class="stat">Duit: <span id="money">0</span></div>
-  <div class="stat">Level: <span id="level">1</span></div>
+  <div class="stat">Level: <span id="level">1</span></div><button id="gainXpBtn">Tambah XP</button> <button id="earnMoneyBtn">Tambah Duit</button>
 
-  <button id="gainXpBtn">Tambah XP</button>
-  <button id="earnMoneyBtn">Tambah Duit</button>
-
-  <hr />
-
-  <h2>Farming & Resources</h2>
+  <hr />  <h2>Farming & Resources</h2>
   <button onclick="addResource('Padi', 5)">Tani Padi +5</button>
   <button onclick="addResource('Sayur', 5)">Tani Sayur +5</button>
   <button onclick="addResource('Kayu', 5)">Kumpul Kayu +5</button>
-  <button onclick="addResource('Kristal', 1)">Cari Kristal +1</button>
-
-  <div class="inv">Padi: <span id="invPadi">0</span></div>
+  <button onclick="addResource('Kristal', 1)">Cari Kristal +1</button>  <div class="inv">Padi: <span id="invPadi">0</span></div>
   <div class="inv">Sayur: <span id="invSayur">0</span></div>
   <div class="inv">Kayu: <span id="invKayu">0</span></div>
-  <div class="inv">Kristal: <span id="invKristal">0</span></div>
+  <div class="inv">Kristal: <span id="invKristal">0</span></div>  <hr /><button onclick="upgradeBuilding()">Upgrade Bangunan (RM500)</button> <button onclick="topupKristal(10)">Topup Kristal +10</button>
 
-  <hr />
-
-  <button onclick="upgradeBuilding()">Upgrade Bangunan (RM500)</button>
-  <button onclick="topupKristal(10)">Topup Kristal +10</button>
-
-  <!-- Firebase & Game Scripts -->
-  <script type="module" src="src/js/firebase-config.js"></script>
-  <script type="module" src="src/js/firebase-auth.js"></script>
-  <script type="module" src="src/js/game.js"></script>
-  <script type="module" src="main.js"></script>
-</body>
+  <hr />  <h2>Marketplace</h2>
+  <div>
+    <select id="marketItem">
+      <option value="Padi">Padi</option>
+      <option value="Sayur">Sayur</option>
+      <option value="Kayu">Kayu</option>
+      <option value="Kristal">Kristal</option>
+    </select>
+    <input type="number" id="marketQty" placeholder="Qty" min="1" value="1">
+    <input type="number" id="marketPrice" placeholder="Harga (RM)" min="1" value="10">
+    <button id="marketSellBtn">Jual</button>
+  </div>  <div>
+    <h3>Senarai Jualan Pemain</h3>
+    <table border="1" style="margin:auto;">
+      <thead>
+        <tr>
+          <th>Item</th><th>Qty</th><th>Harga</th><th>Tindakan</th>
+        </tr>
+      </thead>
+      <tbody id="marketList"></tbody>
+    </table>
+  </div>  <!-- Firebase & Game Scripts -->  <script type="module" src="src/js/firebase-config.js"></script>  <script type="module" src="src/js/firebase-auth.js"></script>  <script type="module" src="src/js/game.js"></script>  <script type="module" src="main.js"></script></body>
 </html>
