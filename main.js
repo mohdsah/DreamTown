@@ -73,3 +73,14 @@ onAuthStateChanged(auth, (user) => {
     // Anda boleh redirect ke login.html
   }
 });
+
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  signOut(auth).then(() => {
+    // Sembunyikan panel game, tunjuk login semula
+    document.getElementById("gamePanel").style.display = "none";
+    document.getElementById("loginPanel").style.display = "block";
+    alert("Berjaya log keluar.");
+  }).catch((error) => {
+    alert("Ralat semasa log keluar: " + error.message);
+  });
+});
