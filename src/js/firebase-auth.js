@@ -1,34 +1,20 @@
-// firebase-auth.js
-import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged
-} from "firebase/auth";
-import { firebaseConfig } from "./firebase-config.js"; // Pastikan config ini wujud
+// src/js/firebase-auth.js
+import app from './firebase-config.js';
+import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
-// Initialize Firebase app
-const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Fungsi daftar pengguna baru
-export function registerUser(email, password) {
-  return createUserWithEmailAndPassword(auth, email, password);
-}
+signInAnonymously(auth)
+  .then(() => {
+    console.log("Anonymous login berjaya");
+  })
+  .catch((error) => {
+    console.error("Ralat login:", error);
+  });
 
-// Fungsi login pengguna
-export function loginUser(email, password) {
-  return signInWithEmailAndPassword(auth, email, password);
-}
-
-// Fungsi logout
-export function logoutUser() {
-  return signOut(auth);
-}
-
-// Fungsi pantau status login
-export function onUserStateChanged(callback) {
-  onAuthStateChanged(auth, callback);
-}
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    console.log("Pengguna log masuk:", user.uid);
+    window.currentUID = user.uid;
+  }
+});
